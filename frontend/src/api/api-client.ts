@@ -1,36 +1,30 @@
-// Example API client using axios
 import axios from 'axios';
+import type { Course, Student, StudentProgress, Section, Enrollment } from '../types/types';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api';
-
-export const apiClient = axios.create({
-  baseURL: API_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+const apiClient = axios.create({
+  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:8080/api',
+  headers: { 'Content-Type': 'application/json' },
 });
 
-// Add request/response interceptors if needed
-apiClient.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    console.error('API Error:', error);
-    return Promise.reject(error);
-  }
-);
-
-// Example API functions
 export const coursesApi = {
-  getAll: () => apiClient.get('/courses'),
-  getById: (id: number) => apiClient.get(`/courses/${id}`),
+  getAll: (gradeLevel?: number) =>
+    apiClient.get<Course[]>('/courses', { params: gradeLevel ? { gradeLevel } : {} }),
+  getById: (id: number) => apiClient.get<Course>(`/courses/${id}`),
 };
 
 export const studentsApi = {
-  getById: (id: number) => apiClient.get(`/students/${id}`),
-  getSchedule: (id: number) => apiClient.get(`/students/${id}/schedule`),
+  getById: (id: number) => apiClient.get<Student>(`/students/${id}`),
+  getSchedule: (id: number) => apiClient.get<Enrollment[]>(`/students/${id}/schedule`),
+  getProgress: (id: number) => apiClient.get<StudentProgress>(`/students/${id}/progress`),
+};
+
+export const sectionsApi = {
+  getAll: () => apiClient.get<Section[]>('/sections'),
 };
 
 export const enrollmentsApi = {
-  enroll: (studentId: number, courseId: number) =>
-    apiClient.post('/enrollments', { studentId, courseId }),
+  enroll: (studentId: number, sectionId: number) =>
+    apiClient.post<Enrollment>('/enrollments', { studentId, sectionId }),
+  drop: (enrollmentId: number, studentId: number) =>
+    apiClient.delete(`/enrollments/${enrollmentId}`, { params: { studentId } }),
 };

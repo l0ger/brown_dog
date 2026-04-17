@@ -1,49 +1,58 @@
-// Example TypeScript types for the application
-
 export interface Course {
   id: number;
   code: string;
   name: string;
+  description: string;
   credits: number;
   hoursPerWeek: number;
-  prerequisiteId?: number;
-  gradeLevel: {
-    min: number;
-    max: number;
-  };
+  courseType: 'core' | 'elective';
+  gradeLevelMin: number;
+  gradeLevelMax: number;
+  semesterOrder: number;
+  specialization: string;
+  prerequisiteId: number | null;
+  prerequisiteName: string | null;
 }
 
 export interface Student {
   id: number;
   firstName: string;
   lastName: string;
-  gradeLevel: number;
   email: string;
+  gradeLevel: number;
+  enrollmentYear: number;
+  expectedGraduationYear: number | null;
+  status: string;
 }
 
-export interface StudentProfile extends Student {
+export interface StudentProgress {
+  studentId: number;
+  fullName: string;
+  gradeLevel: number;
   gpa: number;
   creditsEarned: number;
-  courseHistory: CourseHistory[];
+  creditsRequired: number;
+  canGraduate: boolean;
 }
 
-export interface CourseHistory {
+export interface Section {
   id: number;
-  courseId: number;
-  courseName: string;
-  semesterId: number;
-  status: 'passed' | 'failed';
+  course: Course;
+  teacherName: string;
+  classroom: string;
+  daysOfWeek: string;
+  startTime: string;
+  endTime: string;
 }
 
 export interface Enrollment {
   id: number;
   studentId: number;
-  courseId: number;
-  semesterId: number;
-  status: 'enrolled' | 'completed' | 'dropped';
+  section: Section;
+  status: string;
 }
 
-export interface ValidationError {
-  type: 'prerequisite' | 'conflict' | 'max_courses' | 'other';
+export interface ApiError {
+  type: 'prerequisite' | 'conflict' | 'max_courses' | 'grade_level' | 'not_found' | 'error';
   message: string;
 }

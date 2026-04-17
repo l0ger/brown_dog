@@ -1,14 +1,15 @@
-// Example Redux Toolkit store setup
 import { configureStore } from '@reduxjs/toolkit';
-// Import your slices here
-// import coursesReducer from './slices/coursesSlice';
-// import studentReducer from './slices/studentSlice';
+import coursesReducer from './slices/coursesSlice';
+import sectionsReducer from './slices/sectionsSlice';
+import studentReducer from './slices/studentSlice';
+import enrollmentReducer from './slices/enrollmentSlice';
 
 export const store = configureStore({
   reducer: {
-    // Add your reducers here
-    // courses: coursesReducer,
-    // student: studentReducer,
+    courses: coursesReducer,
+    sections: sectionsReducer,
+    student: studentReducer,
+    enrollment: enrollmentReducer,
   },
 });
 
