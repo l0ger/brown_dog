@@ -12,9 +12,9 @@ export default function StudentProfile() {
   return (
     <div style={styles.card}>
       <h3 style={{ margin: '0 0 8px' }}>{profile.firstName} {profile.lastName}</h3>
-      <div style={styles.row}>
+      <div className="profile-row">
         <span>Grade {profile.gradeLevel}</span>
-        <span>{profile.email}</span>
+        <span className="profile-email">{profile.email}</span>
         <span style={{ textTransform: 'capitalize' }}>{profile.status}</span>
       </div>
       {progress && (
@@ -47,7 +47,7 @@ export default function StudentProfile() {
 
 const styles: Record<string, React.CSSProperties> = {
   card: { background: '#fff', borderRadius: 8, padding: 16, boxShadow: '0 1px 4px rgba(0,0,0,.1)' },
-  row: { display: 'flex', gap: 20, color: '#555', fontSize: 13, marginBottom: 12 },
+  row: {},
   progress: { display: 'flex', gap: 20, alignItems: 'center', flexWrap: 'wrap' },
   stat: { display: 'flex', flexDirection: 'column', alignItems: 'center' },
   label: { fontSize: 11, color: '#888', textTransform: 'uppercase', letterSpacing: 0.5 },

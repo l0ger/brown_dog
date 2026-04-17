@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../store/store';
 import { fetchStudent, fetchSchedule, fetchProgress, clearStudent } from '../store/slices/studentSlice';
@@ -23,24 +23,19 @@ export default function StudentSelector() {
   };
 
   return (
-    <div style={styles.bar}>
-      <strong style={{ marginRight: 12 }}>Maplewood Course Planning</strong>
-      <input
-        type="number"
-        placeholder="Student ID (e.g. 1)"
-        value={inputId}
-        onChange={e => setInputId(e.target.value)}
-        onKeyDown={e => e.key === 'Enter' && handleLoad()}
-        style={styles.input}
-      />
-      <button onClick={handleLoad} style={styles.btn}>Load Student</button>
-      <button onClick={handleClear} style={{ ...styles.btn, background: '#6c757d' }}>Clear</button>
+    <div className="topbar">
+      <span className="topbar-title">Maplewood Course Planning</span>
+      <div className="topbar-controls">
+        <input
+          type="number"
+          placeholder="Student ID (e.g. 1)"
+          value={inputId}
+          onChange={e => setInputId(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && handleLoad()}
+        />
+        <button onClick={handleLoad}>Load Student</button>
+        <button onClick={handleClear} className="btn-clear">Clear</button>
+      </div>
     </div>
   );
 }
-
-const styles: Record<string, React.CSSProperties> = {
-  bar: { display: 'flex', alignItems: 'center', gap: 8, padding: '12px 20px', background: '#1a1a2e', color: '#fff' },
-  input: { padding: '6px 10px', borderRadius: 4, border: 'none', width: 180 },
-  btn: { padding: '6px 14px', borderRadius: 4, border: 'none', background: '#0f3460', color: '#fff', cursor: 'pointer' },
-};

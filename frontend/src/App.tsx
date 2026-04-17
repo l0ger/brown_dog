@@ -1,4 +1,5 @@
 import React from 'react';
+import './App.css';
 import { useSelector } from 'react-redux';
 import { RootState } from './store/store';
 import StudentSelector from './components/StudentSelector';
@@ -10,21 +11,21 @@ export default function App() {
   const profile = useSelector((s: RootState) => s.student.profile);
 
   return (
-    <div style={styles.app}>
+    <div style={{ minHeight: '100vh', background: '#f0f2f5', fontFamily: 'system-ui, sans-serif' }}>
       <StudentSelector />
-      <div style={styles.body}>
+      <div className="app-body">
         {!profile ? (
-          <div style={styles.empty}>
+          <div className="app-empty">
             <h2>Welcome to Maplewood Course Planning</h2>
             <p>Enter a student ID (1–400) above to load a student profile and start enrolling in courses.</p>
           </div>
         ) : (
           <>
-            <div style={styles.left}>
+            <div className="app-left">
               <StudentProfile />
               <Schedule />
             </div>
-            <div style={styles.right}>
+            <div className="app-right">
               <CourseCatalog />
             </div>
           </>
@@ -33,11 +34,3 @@ export default function App() {
     </div>
   );
 }
-
-const styles: Record<string, React.CSSProperties> = {
-  app: { minHeight: '100vh', background: '#f0f2f5', fontFamily: 'system-ui, sans-serif' },
-  body: { display: 'flex', gap: 16, padding: 20, alignItems: 'flex-start', flexWrap: 'wrap' },
-  left: { display: 'flex', flexDirection: 'column', gap: 16, flex: '0 0 420px', minWidth: 300 },
-  right: { flex: 1, minWidth: 320 },
-  empty: { margin: '80px auto', textAlign: 'center', color: '#555' },
-};

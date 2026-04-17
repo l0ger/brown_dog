@@ -1,38 +1,118 @@
-.App {
-  text-align: center;
-}
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* ── Top bar ── */
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: #1a1a2e;
+  color: #fff;
+  flex-wrap: wrap;
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.topbar-title {
+  font-weight: 700;
+  font-size: 15px;
+  margin-right: 4px;
+  white-space: nowrap;
 }
+.topbar-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.topbar input {
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: none;
+  width: 160px;
+  font-size: 14px;
+}
+.topbar button {
+  padding: 6px 14px;
+  border-radius: 4px;
+  border: none;
+  background: #0f3460;
+  color: #fff;
+  cursor: pointer;
+  white-space: nowrap;
+  font-size: 14px;
+}
+.topbar button.btn-clear { background: #6c757d; }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* ── Page body: two-column → single column ── */
+.app-body {
+  display: flex;
+  gap: 16px;
+  padding: 20px;
+  align-items: flex-start;
+}
+.app-left {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  gap: 16px;
+  width: 420px;
+  flex-shrink: 0;
+}
+.app-right {
+  flex: 1;
+  min-width: 0;
 }
 
-.App-link {
-  color: #61dafb;
+/* ── Profile info row: wrap email on small cards ── */
+.profile-row {
+  display: flex;
+  gap: 12px;
+  color: #555;
+  font-size: 13px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.profile-email {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+/* ── Welcome screen ── */
+.app-empty {
+  margin: 80px auto;
+  text-align: center;
+  color: #555;
+}
+
+/* ── Responsive: tablet (≤ 860px) ── */
+@media (max-width: 860px) {
+  .app-body {
+    flex-direction: column;
+    padding: 12px;
   }
-  to {
-    transform: rotate(360deg);
+  .app-left {
+    width: 100%;
+  }
+  .app-right {
+    width: 100%;
+  }
+}
+
+/* ── Responsive: mobile (≤ 480px) ── */
+@media (max-width: 480px) {
+  .topbar {
+    padding: 10px 14px;
+    gap: 6px;
+  }
+  .topbar input {
+    width: 100%;
+  }
+  .topbar-controls {
+    width: 100%;
+  }
+  .app-body {
+    padding: 10px;
+    gap: 12px;
   }
 }
