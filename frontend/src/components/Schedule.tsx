@@ -23,7 +23,16 @@ export default function Schedule() {
       {schedule.length === 0 ? (
         <p style={{ color: '#888' }}>No courses enrolled yet.</p>
       ) : (
+        <div style={styles.tableWrap}>
         <table style={styles.table}>
+          <colgroup>
+            <col style={{ width: '28%' }} />
+            <col style={{ width: '20%' }} />
+            <col style={{ width: '14%' }} />
+            <col style={{ width: '20%' }} />
+            <col style={{ width: '12%' }} />
+            <col style={{ width: '6%' }} />
+          </colgroup>
           <thead>
             <tr>
               {['Course', 'Teacher', 'Room', 'Days', 'Time', ''].map(h => (
@@ -55,17 +64,19 @@ export default function Schedule() {
             ))}
           </tbody>
         </table>
+        </div>
       )}
     </div>
   );
 }
 
 const styles: Record<string, React.CSSProperties> = {
-  card: { background: '#fff', borderRadius: 8, padding: 16, boxShadow: '0 1px 4px rgba(0,0,0,.1)' },
+  card: { background: '#fff', borderRadius: 8, padding: 16, boxShadow: '0 1px 4px rgba(0,0,0,.1)', overflow: 'hidden' },
   title: { margin: '0 0 12px', fontSize: 15 },
-  table: { width: '100%', borderCollapse: 'collapse', fontSize: 13 },
-  th: { textAlign: 'left', padding: '6px 10px', borderBottom: '2px solid #dee2e6', color: '#555', fontSize: 12 },
+  tableWrap: { overflowX: 'auto' },
+  table: { width: '100%', borderCollapse: 'collapse', fontSize: 13, tableLayout: 'fixed' },
+  th: { textAlign: 'left', padding: '6px 8px', borderBottom: '2px solid #dee2e6', color: '#555', fontSize: 12 },
   tr: { borderBottom: '1px solid #f0f0f0' },
-  td: { padding: '8px 10px', verticalAlign: 'top' },
-  dropBtn: { padding: '3px 10px', background: '#dc3545', color: '#fff', border: 'none', borderRadius: 4, cursor: 'pointer', fontSize: 12 },
+  td: { padding: '8px 8px', verticalAlign: 'top', wordBreak: 'break-word' },
+  dropBtn: { padding: '3px 10px', background: '#dc3545', color: '#fff', border: 'none', borderRadius: 4, cursor: 'pointer', fontSize: 12, whiteSpace: 'nowrap' },
 };
