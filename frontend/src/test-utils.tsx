@@ -1,5 +1,5 @@
 import { render, RenderOptions } from '@testing-library/react';
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import { PropsWithChildren, ReactElement } from 'react';
 import coursesReducer from './store/slices/coursesSlice';
@@ -85,15 +85,17 @@ export const mockEnrollment: Enrollment = {
 
 // ── Store factory ────────────────────────────────────────────────────────────
 
+const rootReducer = combineReducers({
+  courses: coursesReducer,
+  sections: sectionsReducer,
+  student: studentReducer,
+  enrollment: enrollmentReducer,
+});
+
 export function createTestStore(preloadedState?: Partial<RootState>) {
   return configureStore({
-    reducer: {
-      courses: coursesReducer,
-      sections: sectionsReducer,
-      student: studentReducer,
-      enrollment: enrollmentReducer,
-    },
-    preloadedState: preloadedState as Partial<RootState>,
+    reducer: rootReducer,
+    preloadedState,
   });
 }
 
