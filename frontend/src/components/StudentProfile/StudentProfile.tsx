@@ -1,7 +1,7 @@
 import React from 'react';
-import clsx from 'clsx';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
+import Card from '../shared/Card';
 import shared from '../../styles/shared.module.css';
 import styles from './StudentProfile.module.css';
 
@@ -17,15 +17,15 @@ function StatItem({ label, children }: { label: string; children: React.ReactNod
 export default function StudentProfile() {
   const { profile, progress, loading, error } = useSelector((s: RootState) => s.student);
 
-  if (loading) return <div className={shared.card}>Loading student…</div>;
-  if (error)   return <div className={clsx(shared.card, styles.cardError)}>{error}</div>;
+  if (loading) return <Card>Loading student…</Card>;
+  if (error)   return <Card className={styles.cardError}>{error}</Card>;
   if (!profile) return null;
 
   const fillWidth = `${Math.min(100, (progress?.creditsEarned ?? 0) / (progress?.creditsRequired ?? 1) * 100)}%`;
   const fillPercent = Math.round((progress?.creditsEarned ?? 0) / (progress?.creditsRequired ?? 1) * 100);
 
   return (
-    <div className={shared.card}>
+    <Card>
       <h3 className={styles.heading}>{profile.firstName} {profile.lastName}</h3>
       <div className="profile-row">
         <span>Grade {profile.gradeLevel}</span>
@@ -49,6 +49,6 @@ export default function StudentProfile() {
           </div>
         </div>
       )}
-    </div>
+    </Card>
   );
 }

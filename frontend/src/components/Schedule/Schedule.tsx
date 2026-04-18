@@ -1,8 +1,8 @@
-import clsx from 'clsx';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../../store/store';
 import { drop } from '../../store/slices/enrollmentSlice';
 import { useStudentRefresh } from '../../store/hooks/useStudentRefresh';
+import Card from '../shared/Card';
 import shared from '../../styles/shared.module.css';
 import styles from './Schedule.module.css';
 
@@ -20,7 +20,7 @@ export default function Schedule() {
   };
 
   return (
-    <div className={clsx(shared.card, shared.cardOverflow)}>
+    <Card overflow>
       <h4 className={shared.title}>Current Schedule ({schedule.length}/5)</h4>
       {schedule.length === 0 ? (
         <p className={styles.empty}>No courses enrolled yet.</p>
@@ -69,6 +69,6 @@ export default function Schedule() {
           </table>
         </div>
       )}
-    </div>
+    </Card>
   );
 }

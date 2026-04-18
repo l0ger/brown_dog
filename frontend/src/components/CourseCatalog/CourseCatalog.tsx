@@ -6,6 +6,9 @@ import { fetchSections } from '../../store/slices/sectionsSlice';
 import { enroll, clearEnrollmentStatus } from '../../store/slices/enrollmentSlice';
 import { useStudentRefresh } from '../../store/hooks/useStudentRefresh';
 import type { Section } from '../../types/types';
+import Card from '../shared/Card';
+import Toast from '../shared/Toast';
+import CourseCard from './CourseCard';
 import shared from '../../styles/shared.module.css';
 import styles from './CourseCatalog.module.css';
 
@@ -47,16 +50,17 @@ export default function CourseCatalog() {
     refreshStudent(profile.id);
   };
 
-  if (sectionsLoading) return <div className={shared.cardMuted}>Loading sections…</div>;
+  if (sectionsLoading) return <Card variant="muted">Loading sections…</Card>;
 
   return (
-    <div className={shared.cardMuted}>
+    <Card variant="muted">
       <h4 className={shared.title}>Course Catalog — Fall 2024 ({filtered.length} sections)</h4>
 
       {(successMessage || error) && (
-        <div className={clsx(shared.toast, error ? shared.toastError : shared.toastSuccess)}>
-          {error ? `${error.type.toUpperCase()}: ${error.message}` : successMessage}
-        </div>
+        <Toast
+          variant={error ? 'error' : 'success'}
+          message={error ? `${error.type.toUpperCase()}: ${error.message}` : successMessage!}
+        />
       )}
 
       <div className={styles.filters}>
@@ -78,49 +82,17 @@ export default function CourseCatalog() {
       </div>
 
       <div className={styles.grid}>
-        {filtered.map(section => {
-          const isEnrolled = enrolledSectionIds.has(section.id);
-          const isCore = section.course.courseType === 'core';
-
-          return (
-            <div
-              key={section.id}
-              className={clsx(styles.courseCard, isEnrolled && styles.courseCardEnrolled)}
-            >
-              <div className={styles.codeRow}>
-                <span className={styles.code}>{section.course.code}</span>
-                <span className={clsx(styles.badge, isCore ? styles.badgeCore : styles.badgeElective)}>
-                  {section.course.courseType}
-                </span>
-              </div>
-              <div className={styles.name}>{section.course.name}</div>
-              <div className={styles.meta}>
-                {section.daysOfWeek} · {section.startTime}–{section.endTime}
-              </div>
-              <div className={styles.meta}>
-                {section.teacherName} · {section.classroom}
-              </div>
-              <div className={styles.meta}>
-                Gr. {section.course.gradeLevelMin}–{section.course.gradeLevelMax} · {section.course.credits} cr
-                {section.course.prerequisiteName && (
-                  <span className={styles.prereq}> · Prereq: {section.course.prerequisiteName}</span>
-                )}
-              </div>
-              <button
-                disabled={!profile || isEnrolled || loading}
-                onClick={() => handleEnroll(section)}
-                className={clsx(
-                  styles.enrollBtn,
-                  isEnrolled && styles.enrollBtnEnrolled,
-                  (!profile || isEnrolled) && styles.enrollBtnDisabled,
-                )}
-              >
-                {isEnrolled ? '✓ Enrolled' : 'Enroll'}
-              </button>
-            </div>
-          );
-        })}
+        {filtered.map(section => (
+          <CourseCard
+            key={section.id}
+            section={section}
+            isEnrolled={enrolledSectionIds.has(section.id)}
+            hasProfile={!!profile}
+            loading={loading}
+            onEnroll={() => handleEnroll(section)}
+          />
+        ))}
       </div>
-    </div>
+    </Card>
   );
 }
