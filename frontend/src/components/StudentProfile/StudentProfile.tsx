@@ -1,19 +1,21 @@
+import clsx from 'clsx';
 import { useSelector } from 'react-redux';
-import { RootState } from '../store/store';
+import { RootState } from '../../store/store';
+import shared from '../../styles/shared.module.css';
 import styles from './StudentProfile.module.css';
 
 export default function StudentProfile() {
   const { profile, progress, loading, error } = useSelector((s: RootState) => s.student);
 
-  if (loading) return <div className={styles.card}>Loading student…</div>;
-  if (error)   return <div className={styles.cardError}>{error}</div>;
+  if (loading) return <div className={shared.card}>Loading student…</div>;
+  if (error)   return <div className={clsx(shared.card, styles.cardError)}>{error}</div>;
   if (!profile) return null;
 
   const fillWidth = `${Math.min(100, (progress?.creditsEarned ?? 0) / (progress?.creditsRequired ?? 1) * 100)}%`;
   const fillPercent = Math.round((progress?.creditsEarned ?? 0) / (progress?.creditsRequired ?? 1) * 100);
 
   return (
-    <div className={styles.card}>
+    <div className={shared.card}>
       <h3 className={styles.heading}>{profile.firstName} {profile.lastName}</h3>
       <div className="profile-row">
         <span>Grade {profile.gradeLevel}</span>

@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import clsx from 'clsx';
-import { RootState, AppDispatch } from '../store/store';
-import { fetchSections } from '../store/slices/sectionsSlice';
-import { enroll, clearEnrollmentStatus } from '../store/slices/enrollmentSlice';
-import { fetchSchedule, fetchProgress } from '../store/slices/studentSlice';
-import type { Section } from '../types/types';
+import { RootState, AppDispatch } from '../../store/store';
+import { fetchSections } from '../../store/slices/sectionsSlice';
+import { enroll, clearEnrollmentStatus } from '../../store/slices/enrollmentSlice';
+import { fetchSchedule, fetchProgress } from '../../store/slices/studentSlice';
+import type { Section } from '../../types/types';
+import shared from '../../styles/shared.module.css';
 import styles from './CourseCatalog.module.css';
 
 export default function CourseCatalog() {
@@ -46,14 +47,14 @@ export default function CourseCatalog() {
     dispatch(fetchProgress(profile.id));
   };
 
-  if (sectionsLoading) return <div className={styles.card}>Loading sections…</div>;
+  if (sectionsLoading) return <div className={shared.cardMuted}>Loading sections…</div>;
 
   return (
-    <div className={styles.card}>
+    <div className={shared.cardMuted}>
       <h4 className={styles.title}>Course Catalog — Fall 2024 ({filtered.length} sections)</h4>
 
       {(successMessage || error) && (
-        <div className={clsx(styles.toast, error ? styles.toastError : styles.toastSuccess)}>
+        <div className={clsx(shared.toast, error ? shared.toastError : shared.toastSuccess)}>
           {error ? `${error.type.toUpperCase()}: ${error.message}` : successMessage}
         </div>
       )}

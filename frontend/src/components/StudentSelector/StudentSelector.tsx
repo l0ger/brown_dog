@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../store/store';
-import { fetchStudent, fetchSchedule, fetchProgress, clearStudent } from '../store/slices/studentSlice';
-import { fetchSections } from '../store/slices/sectionsSlice';
+import { AppDispatch } from '../../store/store';
+import { fetchStudent, fetchSchedule, fetchProgress, clearStudent } from '../../store/slices/studentSlice';
+import { fetchSections } from '../../store/slices/sectionsSlice';
 
 export default function StudentSelector() {
   const dispatch = useDispatch<AppDispatch>();

@@ -1,10 +1,10 @@
 import './App.css';
 import { useSelector } from 'react-redux';
 import { RootState } from './store/store';
-import StudentSelector from './components/StudentSelector';
-import StudentProfile from './components/StudentProfile';
-import Schedule from './components/Schedule';
-import CourseCatalog from './components/CourseCatalog';
+import StudentSelector from './components/StudentSelector/StudentSelector';
+import StudentProfile from './components/StudentProfile/StudentProfile';
+import Schedule from './components/Schedule/Schedule';
+import CourseCatalog from './components/CourseCatalog/CourseCatalog';
 
 export default function App() {
   const profile = useSelector((s: RootState) => s.student.profile);

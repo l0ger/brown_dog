@@ -1,7 +1,9 @@
+import clsx from 'clsx';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState, AppDispatch } from '../store/store';
-import { drop } from '../store/slices/enrollmentSlice';
-import { fetchSchedule, fetchProgress } from '../store/slices/studentSlice';
+import { RootState, AppDispatch } from '../../store/store';
+import { drop } from '../../store/slices/enrollmentSlice';
+import { fetchSchedule, fetchProgress } from '../../store/slices/studentSlice';
+import shared from '../../styles/shared.module.css';
 import styles from './Schedule.module.css';
 
 export default function Schedule() {
@@ -18,7 +20,7 @@ export default function Schedule() {
   };
 
   return (
-    <div className={styles.card}>
+    <div className={clsx(shared.card, shared.cardOverflow)}>
       <h4 className={styles.title}>Current Schedule ({schedule.length}/5)</h4>
       {schedule.length === 0 ? (
         <p className={styles.empty}>No courses enrolled yet.</p>
