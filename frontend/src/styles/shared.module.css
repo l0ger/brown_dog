@@ -18,6 +18,13 @@
   overflow: hidden;
 }
 
+/* ── Section title ── */
+
+.title {
+  margin: 0 0 12px;
+  font-size: var(--font-size-md);
+}
+
 /* ── Toast notifications ── */
 
 .toast {

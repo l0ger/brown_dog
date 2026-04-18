@@ -4,13 +4,14 @@ import clsx from 'clsx';
 import { RootState, AppDispatch } from '../../store/store';
 import { fetchSections } from '../../store/slices/sectionsSlice';
 import { enroll, clearEnrollmentStatus } from '../../store/slices/enrollmentSlice';
-import { fetchSchedule, fetchProgress } from '../../store/slices/studentSlice';
+import { useStudentRefresh } from '../../store/hooks/useStudentRefresh';
 import type { Section } from '../../types/types';
 import shared from '../../styles/shared.module.css';
 import styles from './CourseCatalog.module.css';
 
 export default function CourseCatalog() {
   const dispatch = useDispatch<AppDispatch>();
+  const refreshStudent = useStudentRefresh();
   const { items: sections, loading: sectionsLoading } = useSelector((s: RootState) => s.sections);
   const { profile, schedule } = useSelector((s: RootState) => s.student);
   const { loading, error, successMessage } = useSelector((s: RootState) => s.enrollment);
@@ -43,15 +44,14 @@ export default function CourseCatalog() {
   const handleEnroll = async (section: Section) => {
     if (!profile) return;
     await dispatch(enroll({ studentId: profile.id, sectionId: section.id }));
-    dispatch(fetchSchedule(profile.id));
-    dispatch(fetchProgress(profile.id));
+    refreshStudent(profile.id);
   };
 
   if (sectionsLoading) return <div className={shared.cardMuted}>Loading sections…</div>;
 
   return (
     <div className={shared.cardMuted}>
-      <h4 className={styles.title}>Course Catalog — Fall 2024 ({filtered.length} sections)</h4>
+      <h4 className={shared.title}>Course Catalog — Fall 2024 ({filtered.length} sections)</h4>
 
       {(successMessage || error) && (
         <div className={clsx(shared.toast, error ? shared.toastError : shared.toastSuccess)}>

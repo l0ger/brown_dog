@@ -1,8 +1,18 @@
+import React from 'react';
 import clsx from 'clsx';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import shared from '../../styles/shared.module.css';
 import styles from './StudentProfile.module.css';
+
+function StatItem({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className={styles.stat}>
+      <span className={styles.label}>{label}</span>
+      <span className={styles.value}>{children}</span>
+    </div>
+  );
+}
 
 export default function StudentProfile() {
   const { profile, progress, loading, error } = useSelector((s: RootState) => s.student);
@@ -24,20 +34,13 @@ export default function StudentProfile() {
       </div>
       {progress && (
         <div className={styles.progress}>
-          <div className={styles.stat}>
-            <span className={styles.label}>GPA</span>
-            <span className={styles.value}>{progress.gpa.toFixed(2)}</span>
-          </div>
-          <div className={styles.stat}>
-            <span className={styles.label}>Credits Earned</span>
-            <span className={styles.value}>{progress.creditsEarned} / {progress.creditsRequired}</span>
-          </div>
-          <div className={styles.stat}>
-            <span className={styles.label}>Graduation</span>
+          <StatItem label="GPA">{progress.gpa.toFixed(2)}</StatItem>
+          <StatItem label="Credits Earned">{progress.creditsEarned} / {progress.creditsRequired}</StatItem>
+          <StatItem label="Graduation">
             <span className={progress.canGraduate ? styles.graduationEligible : styles.graduationInProgress}>
               {progress.canGraduate ? '✓ Eligible' : 'In Progress'}
             </span>
-          </div>
+          </StatItem>
           <div className={styles.barContainer}>
             <div className={styles.barBg}>
               <div className={styles.barFill} style={{ width: fillWidth }} />

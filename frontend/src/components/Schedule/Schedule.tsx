@@ -2,12 +2,13 @@ import clsx from 'clsx';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../../store/store';
 import { drop } from '../../store/slices/enrollmentSlice';
-import { fetchSchedule, fetchProgress } from '../../store/slices/studentSlice';
+import { useStudentRefresh } from '../../store/hooks/useStudentRefresh';
 import shared from '../../styles/shared.module.css';
 import styles from './Schedule.module.css';
 
 export default function Schedule() {
   const dispatch = useDispatch<AppDispatch>();
+  const refreshStudent = useStudentRefresh();
   const { schedule, profile } = useSelector((s: RootState) => s.student);
   const { loading } = useSelector((s: RootState) => s.enrollment);
 
@@ -15,13 +16,12 @@ export default function Schedule() {
 
   const handleDrop = async (enrollmentId: number) => {
     await dispatch(drop({ enrollmentId, studentId: profile.id }));
-    dispatch(fetchSchedule(profile.id));
-    dispatch(fetchProgress(profile.id));
+    refreshStudent(profile.id);
   };
 
   return (
     <div className={clsx(shared.card, shared.cardOverflow)}>
-      <h4 className={styles.title}>Current Schedule ({schedule.length}/5)</h4>
+      <h4 className={shared.title}>Current Schedule ({schedule.length}/5)</h4>
       {schedule.length === 0 ? (
         <p className={styles.empty}>No courses enrolled yet.</p>
       ) : (
