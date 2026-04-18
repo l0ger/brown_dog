@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
 import { enrollmentsApi } from '../../api/api-client';
 import type { ApiError } from '../../types/types';
 
@@ -8,8 +9,11 @@ export const enroll = createAsyncThunk(
     try {
       const res = await enrollmentsApi.enroll(studentId, sectionId);
       return res.data;
-    } catch (err: any) {
-      return rejectWithValue(err.response?.data as ApiError);
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        return rejectWithValue(err.response?.data as ApiError);
+      }
+      return rejectWithValue({ type: 'error', message: 'An unexpected error occurred' } as ApiError);
     }
   }
 );
@@ -20,8 +24,11 @@ export const drop = createAsyncThunk(
     try {
       await enrollmentsApi.drop(enrollmentId, studentId);
       return enrollmentId;
-    } catch (err: any) {
-      return rejectWithValue(err.response?.data as ApiError);
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        return rejectWithValue(err.response?.data as ApiError);
+      }
+      return rejectWithValue({ type: 'error', message: 'An unexpected error occurred' } as ApiError);
     }
   }
 );

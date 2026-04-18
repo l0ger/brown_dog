@@ -2,6 +2,13 @@
 *, *::before, *::after { box-sizing: border-box; }
 body { margin: 0; }
 
+/* ── App wrapper ── */
+.appWrapper {
+  min-height: 100vh;
+  background: var(--color-bg);
+  font-family: system-ui, sans-serif;
+}
+
 /* ── Top bar ── */
 .topbar {
   display: flex;

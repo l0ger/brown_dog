@@ -1,0 +1,66 @@
+.card {
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.title {
+  margin: 0 0 12px;
+  font-size: var(--font-size-md);
+}
+
+.empty {
+  color: var(--color-text-muted);
+}
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-base);
+  table-layout: fixed;
+}
+
+.th {
+  text-align: left;
+  padding: 6px 8px;
+  border-bottom: 2px solid var(--color-border);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.tr {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.td {
+  padding: 8px;
+  vertical-align: top;
+  word-break: break-word;
+}
+
+.courseName {
+  font-size: 12px;
+  color: var(--color-text-light);
+}
+
+.dropBtn {
+  padding: 3px 10px;
+  background: var(--color-danger);
+  color: var(--color-surface);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.dropBtn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}

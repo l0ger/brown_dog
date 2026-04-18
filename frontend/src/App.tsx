@@ -1,4 +1,3 @@
-import React from 'react';
 import './App.css';
 import { useSelector } from 'react-redux';
 import { RootState } from './store/store';
@@ -11,7 +10,7 @@ export default function App() {
   const profile = useSelector((s: RootState) => s.student.profile);
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f0f2f5', fontFamily: 'system-ui, sans-serif' }}>
+    <div className="appWrapper">
       <StudentSelector />
       <div className="app-body">
         {!profile ? (
