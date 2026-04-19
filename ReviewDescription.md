@@ -4,60 +4,23 @@ A full-stack web application that allows students to browse available courses, b
 
 ---
 
-## Repository
+## How to Run
 
-**GitHub:** name the repository with a random color and animal name (e.g. `cobalt-pangolin`)
+### Backend (Spring Boot — port 8080)
 
----
-
-## Tech Stack
-
-| Layer | Technology |
-|---|---|
-| Backend | Java 17, Spring Boot 3.2, Spring Data JPA |
-| Database | SQLite (pre-populated, 400 students, 57 courses) |
-| Frontend | React 18, TypeScript, Redux Toolkit |
-| API client | Axios |
-| Build tools | Maven, npm |
-
----
-
-## Running Locally
-
-### Option 1 — Dev Container (recommended)
-
-Prerequisites: VS Code, Docker Desktop, Dev Containers extension.
-
-```bash
-git clone <repo-url>
-cd <repo-name>
-# Open in VS Code and click "Reopen in Container" when prompted
-```
-
-Both servers start automatically inside the container.
-
-### Option 2 — Manual
-
-**Requirements:** Java 17+, Maven, Node 20+
-
-**Backend**
 ```bash
 cd backend
 mvn spring-boot:run
-# Runs on http://localhost:8080
 ```
 
-**Frontend**
+### Frontend (React — port 3000)
+
 ```bash
 cd frontend
 npm install
 npm start
-# Runs on http://localhost:3000
 ```
 
-Open `http://localhost:3000`, enter any student ID between 1 and 400, and start enrolling.
-
----
 
 ## Architecture
 
