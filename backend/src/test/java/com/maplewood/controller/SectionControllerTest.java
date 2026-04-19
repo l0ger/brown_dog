@@ -29,7 +29,7 @@ class SectionControllerTest {
 
     @Test
     void getAll_returnsOkWithSections() throws Exception {
-        when(sectionService.getActiveSemesterSections()).thenReturn(List.of(sampleSection()));
+        when(sectionService.getActiveSemesterSections(null)).thenReturn(List.of(sampleSection()));
 
         mockMvc.perform(get("/api/sections"))
                 .andExpect(status().isOk())
@@ -40,8 +40,19 @@ class SectionControllerTest {
     }
 
     @Test
+    void getAll_withGradeLevel_passesFilterToService() throws Exception {
+        when(sectionService.getActiveSemesterSections(10)).thenReturn(List.of(sampleSection()));
+
+        mockMvc.perform(get("/api/sections").param("gradeLevel", "10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(10));
+
+        verify(sectionService).getActiveSemesterSections(10);
+    }
+
+    @Test
     void getAll_noActiveSemester_returns404() throws Exception {
-        when(sectionService.getActiveSemesterSections())
+        when(sectionService.getActiveSemesterSections(null))
                 .thenThrow(new ResourceNotFoundException("No active semester found."));
 
         mockMvc.perform(get("/api/sections"))

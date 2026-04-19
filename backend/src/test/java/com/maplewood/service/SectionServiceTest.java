@@ -77,7 +77,7 @@ class SectionServiceTest {
         CourseSection section = stubSection(10L, sem);
         when(sectionRepository.findBySemesterId(1L)).thenReturn(List.of(section));
 
-        List<SectionResponse> result = sectionService.getActiveSemesterSections();
+        List<SectionResponse> result = sectionService.getActiveSemesterSections(null);
 
         assertThat(result).hasSize(1);
         assertThat(result.get(0).id()).isEqualTo(10L);
@@ -86,10 +86,24 @@ class SectionServiceTest {
     }
 
     @Test
+    void getActiveSemesterSections_withGradeLevel_callsFilteredQuery() {
+        Semester sem = stubSemester(1L);
+        when(semesterRepository.findByIsActive(1)).thenReturn(Optional.of(sem));
+        CourseSection section = stubSection(10L, sem);
+        when(sectionRepository.findBySemesterIdAndGradeLevel(1L, 10)).thenReturn(List.of(section));
+
+        List<SectionResponse> result = sectionService.getActiveSemesterSections(10);
+
+        assertThat(result).hasSize(1);
+        verify(sectionRepository).findBySemesterIdAndGradeLevel(1L, 10);
+        verify(sectionRepository, never()).findBySemesterId(any());
+    }
+
+    @Test
     void getActiveSemesterSections_noActiveSemester_throwsResourceNotFoundException() {
         when(semesterRepository.findByIsActive(1)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> sectionService.getActiveSemesterSections())
+        assertThatThrownBy(() -> sectionService.getActiveSemesterSections(null))
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining("active semester");
     }

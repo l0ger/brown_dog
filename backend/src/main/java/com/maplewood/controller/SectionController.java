@@ -18,8 +18,9 @@ public class SectionController {
     }
 
     @GetMapping
-    public ResponseEntity<List<SectionResponse>> getAll() {
-        return ResponseEntity.ok(sectionService.getActiveSemesterSections());
+    public ResponseEntity<List<SectionResponse>> getAll(
+            @RequestParam(required = false) Integer gradeLevel) {
+        return ResponseEntity.ok(sectionService.getActiveSemesterSections(gradeLevel));
     }
 
     @GetMapping("/{id}")

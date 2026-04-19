@@ -20,12 +20,13 @@ public class SectionService {
         this.semesterRepository = semesterRepository;
     }
 
-    public List<SectionResponse> getActiveSemesterSections() {
+    public List<SectionResponse> getActiveSemesterSections(Integer gradeLevel) {
         var semester = semesterRepository.findByIsActive(1)
                 .orElseThrow(() -> new ResourceNotFoundException("No active semester found."));
-        return sectionRepository.findBySemesterId(semester.getId()).stream()
-                .map(SectionResponse::from)
-                .toList();
+        var sections = gradeLevel != null
+                ? sectionRepository.findBySemesterIdAndGradeLevel(semester.getId(), gradeLevel)
+                : sectionRepository.findBySemesterId(semester.getId());
+        return sections.stream().map(SectionResponse::from).toList();
     }
 
     public SectionResponse getById(Long id) {

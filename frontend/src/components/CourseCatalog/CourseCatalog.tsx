@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import clsx from 'clsx';
 import { RootState, AppDispatch } from '../../store/store';
-import { fetchSections } from '../../store/slices/sectionsSlice';
+import { fetchSections, clearSections } from '../../store/slices/sectionsSlice';
 import { enroll, clearEnrollmentStatus } from '../../store/slices/enrollmentSlice';
 import { useStudentRefresh } from '../../store/hooks/useStudentRefresh';
 import type { Section } from '../../types/types';
@@ -23,8 +23,12 @@ export default function CourseCatalog() {
   const [typeFilter, setTypeFilter] = useState<'all' | 'core' | 'elective'>('all');
 
   useEffect(() => {
-    if (sections.length === 0) dispatch(fetchSections());
-  }, [dispatch, sections.length]);
+    if (profile?.gradeLevel) {
+      dispatch(fetchSections(profile.gradeLevel));
+    } else {
+      dispatch(clearSections());
+    }
+  }, [dispatch, profile?.gradeLevel]);
 
   useEffect(() => {
     if (successMessage || error) {

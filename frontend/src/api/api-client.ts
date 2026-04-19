@@ -19,7 +19,8 @@ export const studentsApi = {
 };
 
 export const sectionsApi = {
-  getAll: () => apiClient.get<Section[]>('/sections'),
+  getAll: (gradeLevel?: number) =>
+    apiClient.get<Section[]>('/sections', { params: gradeLevel ? { gradeLevel } : {} }),
 };
 
 export const enrollmentsApi = {
