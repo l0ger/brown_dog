@@ -1,5 +1,6 @@
 package com.maplewood.domain.model;
 
+import com.maplewood.domain.AcademicConstants;
 import jakarta.persistence.*;
 
 @Entity
@@ -20,7 +21,7 @@ public class Enrollment {
 
     // "enrolled" | "dropped"
     @Column(name = "status", nullable = false)
-    private String status = "enrolled";
+    private String status = AcademicConstants.STATUS_ENROLLED;
 
     public Long getId() { return id; }
     public Student getStudent() { return student; }

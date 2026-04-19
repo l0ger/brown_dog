@@ -1,5 +1,6 @@
 package com.maplewood.service;
 
+import com.maplewood.domain.AcademicConstants;
 import com.maplewood.domain.model.StudentCourseHistory;
 import com.maplewood.dto.response.EnrollmentResponse;
 import com.maplewood.dto.response.StudentProgressResponse;
@@ -53,7 +54,7 @@ public class StudentService {
                 .sum();
 
         double creditsEarned = history.stream()
-                .filter(h -> "passed".equals(h.getStatus()))
+                .filter(h -> AcademicConstants.STATUS_PASSED.equals(h.getStatus()))
                 .mapToDouble(h -> h.getCourse().getCredits())
                 .sum();
 
@@ -61,7 +62,7 @@ public class StudentService {
                 ? Math.round((creditsEarned / totalCreditsTaken) * 4.0 * 100.0) / 100.0
                 : 0.0;
 
-        double creditsRequired = 30.0;
+        double creditsRequired = AcademicConstants.CREDITS_REQUIRED_FOR_PROMOTION;
 
         return new StudentProgressResponse(
                 student.getId(),

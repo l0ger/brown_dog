@@ -48,11 +48,6 @@ public class DataInitializer implements CommandLineRunner {
 
         Semester semester = activeSemester.get();
 
-        if (sectionRepository.existsByCourseIdAndSemesterId(null, semester.getId())) {
-            log.info("Sections already exist for {} {} — skipping seed.", semester.getName(), semester.getYear());
-            return;
-        }
-
         // Fall semester (order=1) courses only
         List<Course> fallCourses = courseRepository.findAllWithDetails().stream()
                 .filter(c -> c.getSemesterOrder() == semester.getOrderInYear())

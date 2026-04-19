@@ -1,6 +1,9 @@
 package com.maplewood.service;
 
+import com.maplewood.domain.AcademicConstants;
+import com.maplewood.domain.model.CourseSection;
 import com.maplewood.domain.model.Enrollment;
+import com.maplewood.domain.model.Student;
 import com.maplewood.dto.request.EnrollmentRequest;
 import com.maplewood.dto.response.EnrollmentResponse;
 import com.maplewood.exception.*;
@@ -31,54 +34,23 @@ public class EnrollmentService {
 
     @Transactional
     public EnrollmentResponse enroll(EnrollmentRequest request) {
-        var student = studentRepository.findById(request.studentId())
+        Student student = studentRepository.findById(request.studentId())
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found: " + request.studentId()));
 
-        var section = sectionRepository.findById(request.sectionId())
+        CourseSection section = sectionRepository.findById(request.sectionId())
                 .orElseThrow(() -> new ResourceNotFoundException("Section not found: " + request.sectionId()));
 
-        var course = section.getCourse();
-        var semesterId = section.getSemester().getId();
+        Long semesterId = section.getSemester().getId();
 
-        // Check 1: prerequisite
-        if (course.getPrerequisite() != null) {
-            boolean hasPassed = historyRepository.existsByStudentIdAndCourseIdAndStatus(
-                    student.getId(), course.getPrerequisite().getId(), "passed");
-            if (!hasPassed) {
-                throw new PrerequisiteNotMetException(course.getPrerequisite().getName());
-            }
-        }
-
-        // Check 2: grade level
-        if (course.getGradeLevelMin() != null && course.getGradeLevelMax() != null) {
-            int grade = student.getGradeLevel();
-            if (grade < course.getGradeLevelMin() || grade > course.getGradeLevelMax()) {
-                throw new GradeLevelViolationException(grade, course.getGradeLevelMin(), course.getGradeLevelMax());
-            }
-        }
-
-        // Check 3: course overload (max 5 per semester)
-        long currentCount = enrollmentRepository.countByStudentIdAndSectionSemesterIdAndStatus(
-                student.getId(), semesterId, "enrolled");
-        if (currentCount >= 5) {
-            throw new CourseOverloadException();
-        }
-
-        // Check 4: schedule conflict
-        List<Enrollment> existing = enrollmentRepository.findActiveByStudentId(student.getId());
-        for (Enrollment e : existing) {
-            var existingSection = e.getSection();
-            if (!existingSection.getSemester().getId().equals(semesterId)) continue;
-            if (hasTimeConflict(section.getDaysOfWeek(), section.getStartTime(), section.getEndTime(),
-                    existingSection.getDaysOfWeek(), existingSection.getStartTime(), existingSection.getEndTime())) {
-                throw new ScheduleConflictException(existingSection.getCourse().getName());
-            }
-        }
+        validatePrerequisite(student, section);
+        validateGradeLevel(student, section);
+        validateCourseOverload(student, semesterId);
+        validateScheduleConflict(student, section, semesterId);
 
         var enrollment = new Enrollment();
         enrollment.setStudent(student);
         enrollment.setSection(section);
-        enrollment.setStatus("enrolled");
+        enrollment.setStatus(AcademicConstants.STATUS_ENROLLED);
 
         return EnrollmentResponse.from(enrollmentRepository.save(enrollment));
     }
@@ -90,8 +62,47 @@ public class EnrollmentService {
         if (!enrollment.getStudent().getId().equals(studentId)) {
             throw new ResourceNotFoundException("Enrollment not found: " + enrollmentId);
         }
-        enrollment.setStatus("dropped");
+        enrollment.setStatus(AcademicConstants.STATUS_DROPPED);
         enrollmentRepository.save(enrollment);
+    }
+
+    private void validatePrerequisite(Student student, CourseSection section) {
+        var course = section.getCourse();
+        if (course.getPrerequisite() == null) return;
+        boolean hasPassed = historyRepository.existsByStudentIdAndCourseIdAndStatus(
+                student.getId(), course.getPrerequisite().getId(), AcademicConstants.STATUS_PASSED);
+        if (!hasPassed) {
+            throw new PrerequisiteNotMetException(course.getPrerequisite().getName());
+        }
+    }
+
+    private void validateGradeLevel(Student student, CourseSection section) {
+        var course = section.getCourse();
+        if (course.getGradeLevelMin() == null || course.getGradeLevelMax() == null) return;
+        int grade = student.getGradeLevel();
+        if (grade < course.getGradeLevelMin() || grade > course.getGradeLevelMax()) {
+            throw new GradeLevelViolationException(grade, course.getGradeLevelMin(), course.getGradeLevelMax());
+        }
+    }
+
+    private void validateCourseOverload(Student student, Long semesterId) {
+        long currentCount = enrollmentRepository.countByStudentIdAndSectionSemesterIdAndStatus(
+                student.getId(), semesterId, AcademicConstants.STATUS_ENROLLED);
+        if (currentCount >= AcademicConstants.MAX_COURSES_PER_SEMESTER) {
+            throw new CourseOverloadException();
+        }
+    }
+
+    private void validateScheduleConflict(Student student, CourseSection section, Long semesterId) {
+        List<Enrollment> existing = enrollmentRepository.findActiveByStudentId(student.getId());
+        for (Enrollment e : existing) {
+            var existingSection = e.getSection();
+            if (!existingSection.getSemester().getId().equals(semesterId)) continue;
+            if (hasTimeConflict(section.getDaysOfWeek(), section.getStartTime(), section.getEndTime(),
+                    existingSection.getDaysOfWeek(), existingSection.getStartTime(), existingSection.getEndTime())) {
+                throw new ScheduleConflictException(existingSection.getCourse().getName());
+            }
+        }
     }
 
     private boolean hasTimeConflict(String days1, String start1, String end1,
