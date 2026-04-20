@@ -1,3 +1,5 @@
+
+
 # Maplewood High School — Course Planning System
 
 A full-stack web application that allows students to browse available courses, build their semester schedule, and track their graduation progress.
@@ -6,6 +8,24 @@ A full-stack web application that allows students to browse available courses, b
 
 ## How to Run
 
+### Using Dev Container 
+1. **Prerequisites**:
+   - VS Code
+   - Docker Desktop
+   - "Dev Containers" extension for VS Code
+
+2. **Steps**:
+   ```bash
+   # Clone the repository
+   git clone <your-repo-url>
+   cd <your-repo>
+
+   # Open in VS Code
+   code .
+
+   # Click "Reopen in Container" when prompted
+   # OR use Command Palette (Cmd/Ctrl+Shift+P): "Dev Containers: Reopen in Container"
+   ```
 ### Backend (Spring Boot — port 8080)
 
 ```bash
